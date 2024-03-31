@@ -262,7 +262,7 @@ class _RegisterScreenPhoneState extends State<RegisterScreenPhone> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => OtpScreen(),
+              builder: (context) => const OtpScreen(),
             ),
           );
         },

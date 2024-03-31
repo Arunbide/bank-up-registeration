@@ -42,10 +42,11 @@ class _AuthState extends State<Auth> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (storedPhoneNumber.isEmpty || userData == null) {
-            return const RegisterScreen();
+            return const RegisterScreenPhone();
           } else {
             return SubscriptionPage();
           }
+          //pushbankup2
         },
       ),
     );
