@@ -170,6 +170,7 @@ class DeleteAccountScreen extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
+
                     'Delete Account',
                     style: TextStyle(fontSize: 14, color: Colors.white),
                   ),
