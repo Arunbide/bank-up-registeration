@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io' as io;
 import 'dart:io';
+import 'package:bankup/screens/ad_screen/PromotionalAdScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:purchases_ui_flutter/purchases_ui_flutter.dart';
 
-import '../personal_checking_screen/personal_checking_screen.dart';
 
 class SubscriptionPage extends StatefulWidget {
   @override
@@ -24,8 +24,9 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   @override
   void initState() {
-    _configureRevenueCatSDK();
     super.initState();
+    // Call checkUserSubscription to verify subscription status first
+    checkUserSubscription();
   }
 
   Future<void> _configureRevenueCatSDK() async {
@@ -111,7 +112,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
               ),
               TextButton(
                 style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF243407)),
+                  backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF243407)),
                   foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
                 ),
                 child: const Text('Subscribe'),
@@ -126,8 +127,6 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       },
     );
   }
-
-
 
   Future<void> displayPayWall() async {
     try {
@@ -161,10 +160,11 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
 
   void redirectHomeScreen() async {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const PersonalCheckingScreen()));
+        MaterialPageRoute(builder: (context) => PromotionalAdScreen()));
   }
 
   Future<void> checkUserSubscription() async {
+    await _configureRevenueCatSDK(); // Call configuration
     Purchases.addCustomerInfoUpdateListener((customerInfo) async {
       EntitlementInfo? entitlement = customerInfo.entitlements.all[payWall];
       if(entitlement?.isActive ?? false) {

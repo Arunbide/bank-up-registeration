@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bankup/screens/register_screen/register_screen_phone.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
   final String firstName;
@@ -23,7 +25,7 @@ class DeleteAccountScreen extends StatelessWidget {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'Cancel',
@@ -35,14 +37,31 @@ class DeleteAccountScreen extends StatelessWidget {
                 try {
                   User? user = FirebaseAuth.instance.currentUser;
                   if (user != null) {
+                    // Clear SharedPreferences
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('phoneNumber');
+                    prefs.remove('verificationId');
+                    prefs.remove('firstName');
+                    prefs.remove('lastName');
+                    prefs.remove('email');
+
                     await user.delete();
-                    Navigator.of(context).pop(); // Close the dialog
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterScreenPhone(),
+                      ),
+                    );
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('User account deleted successfully.'),
                         backgroundColor: Colors.green,
                       ),
                     );
+
+                    Navigator.of(context).pop();
                   } else {
                     print('Failed to delete user account');
                   }
@@ -57,7 +76,7 @@ class DeleteAccountScreen extends StatelessWidget {
               },
               child: const Text(
                 'Delete',
-                style: TextStyle(color: Colors.red, fontSize: 14), // Adjust text size
+                style: TextStyle(color: Colors.red, fontSize: 14),
               ),
             ),
           ],
@@ -69,14 +88,14 @@ class DeleteAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      // Handle back button
       onWillPop: () async {
         Navigator.of(context).pop(false);
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Delete Account', style: TextStyle(fontSize: 16, color: Colors.white)), // Adjust app bar text size and color
+          title: const Text('Delete Account',
+              style: TextStyle(fontSize: 16, color: Colors.white)),
           backgroundColor: Colors.green,
         ),
         body: Center(
@@ -109,7 +128,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         subtitle: Text(
                           firstName,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ),
                       ListTile(
@@ -121,7 +140,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         subtitle: Text(
                           lastName,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ),
                       ListTile(
@@ -133,7 +152,7 @@ class DeleteAccountScreen extends StatelessWidget {
                         ),
                         subtitle: Text(
                           email,
-                          style: TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 18),
                         ),
                       ),
                     ],
@@ -144,7 +163,8 @@ class DeleteAccountScreen extends StatelessWidget {
                   onPressed: () => deleteCurrentUser(context),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.red,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
                     ),

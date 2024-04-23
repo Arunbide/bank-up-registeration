@@ -248,7 +248,7 @@ class _RegisterScreen extends State<RegisterScreen> {
                             // Navigate to another screen here
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => RegisterScreenPhone()),
+                              MaterialPageRoute(builder: (context) => const RegisterScreenPhone()),
                             );
                           },
                           child: const Text(
